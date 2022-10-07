@@ -1,0 +1,173 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class HandleAtmProcess {
+	public void customersdetails() throws IOException {
+		int Account_no;
+		String Account_Holder;
+		int Pin_number;
+		int Account_balance;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("enter the no.of customer ");
+		int customercount=sc.nextInt();
+		List<Account_details> l=new ArrayList<Account_details>();
+		for(int i=0;i<customercount;i++) {
+			System.out.println("Account_no:");
+			Account_no=sc.nextInt();
+			sc.nextLine();
+			System.out.println("Account_Holder");
+			 Account_Holder=sc.nextLine();
+			System.out.println("Pin_number");
+		    Pin_number=sc.nextInt();
+			System.out.println("Account_balance");
+			 Account_balance=sc.nextInt();
+			l.add(new Account_details(Account_no, Account_Holder,Pin_number,Account_balance));
+			FileOutputStream f=new FileOutputStream("Accountdetails.txt");
+			ObjectOutputStream o=new ObjectOutputStream(f);
+		   o.writeObject(l);
+		   o.flush();
+		}
+	}
+	
+	public void display() throws IOException, ClassNotFoundException {
+		ArrayList<Account_details> acc1=new ArrayList<Account_details>();
+	    FileInputStream ff=new FileInputStream("Accountdetails.txt");
+		ObjectInputStream oo=new ObjectInputStream(ff);
+		acc1=(ArrayList<Account_details>)oo.readObject();
+		oo.close();
+		ff.close();
+	for(Account_details a:acc1) {
+		System.out.println(a);
+		}
+	}
+   public void accountbalance() throws IOException, ClassNotFoundException {
+	   Scanner sc=new Scanner(System.in);
+	   System.out.println("Enter the pin");
+	   int pin=sc.nextInt();
+	   ArrayList<Account_details> acc=new ArrayList<Account_details>();
+		  FileInputStream ff=new FileInputStream("Accountdetails.txt");
+			ObjectInputStream oo=new ObjectInputStream(ff);
+			acc=(ArrayList)oo.readObject();
+			int count=0;
+			for(Account_details d:acc) {
+				if(pin==d.getPin_number()) {
+			System.out.println("Balance of "+d.getAccount_Holder()+"="+d.getAccount_balance());
+			count++;
+			break;
+				}	
+			}
+			if(count==0) {
+				System.out.println("Pin doesn't match");
+			}
+			oo.close();
+			ff.close();
+   }
+   public void withdrwal() throws IOException, ClassNotFoundException{
+	   Scanner sc=new Scanner(System.in);
+	   System.out.println("Enter the pin:");
+	   int pin=sc.nextInt();
+	   System.out.println("Enter the amount:");
+	   int amount=sc.nextInt();
+	   int a;
+	   ArrayList<Account_details> acc=new ArrayList<Account_details>();
+		  FileInputStream ff=new FileInputStream("Accountdetails.txt");
+			ObjectInputStream oo=new ObjectInputStream(ff);
+			acc=(ArrayList<Account_details>)oo.readObject();
+			for(Account_details d:acc) {
+				if(pin==d.getPin_number()) {
+				a=d.getAccount_balance();
+					a=a- amount;
+					d.setAccount_balance(a);
+					System.out.println(d.getAccount_balance());
+				}
+		
+				}
+		
+				}
+
+   public void transfer() throws ClassNotFoundException, IOException {
+	   int a;
+	   Scanner sc=new Scanner(System.in);
+	  System.out.println("Sender Account_no:");
+	  int account_no =sc.nextInt();
+	   System.out.println("Enter the  Account_no money to be transferred:");
+	   int account_no1=sc.nextInt();
+	   
+	   System.out.println("Enter the amount to be transferred");
+	   int amount=sc.nextInt();
+	   ArrayList<Account_details> acc=new ArrayList<Account_details>();
+	   FileInputStream ff=new FileInputStream("Accountdetails.txt");
+		ObjectInputStream oo=new ObjectInputStream(ff);
+		acc=(ArrayList<Account_details>)oo.readObject();
+		for(Account_details d:acc) {
+			if(account_no1==d.getAccount_no()) {
+				a=d.getAccount_balance();
+				a+=amount;
+				d.setAccount_balance(a);
+				System.out.println("Balance amount "+d.getAccount_balance());
+			}
+			if(account_no==d.getAccount_no()) {
+				a=d.getAccount_balance();
+				a-=amount;
+				d.setAccount_balance(a);
+				System.out.println("Balance amount "+d.getAccount_balance());
+			}
+		}
+	   
+   }
+
+}
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class CustomeDetails {
+public static void main(String[] args) throws IOException, ClassNotFoundException {
+	
+	Scanner sc=new Scanner(System.in);	
+	while(true) {
+	System.out.println("enter the choice ");
+	int choice=sc.nextInt();
+	
+switch(choice) {
+case 1:
+	HandleAtmProcess a=new HandleAtmProcess();
+	  a.customersdetails();
+	   break;
+	
+case 2:
+	HandleAtmProcess a1=new HandleAtmProcess();
+	a1.display();
+			break;
+case 3:
+	HandleAtmProcess a2=new HandleAtmProcess();
+	a2.accountbalance();
+	break;
+case 4:
+	HandleAtmProcess a3=new HandleAtmProcess();
+	a3.withdrwal();
+	break;
+case 5:
+	HandleAtmProcess a4=new HandleAtmProcess();
+	a4.transfer();
+	break;
+default:
+	System.out.println("choice not match");
+	
+}
+}
+}
+}
